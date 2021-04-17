@@ -1,0 +1,61 @@
+---
+
+
+- name: Listing current repo filles
+  find:
+    paths: "/etc/yum.repos.d/"
+    patterns: '*.repo'
+  register: yum_repo_list
+
+- name: Remove repo filles
+  file:
+    state: absent
+    path: "{{ item.path }}"
+  with_items: "{{ yum_repo_list.files }}"
+
+- name: Setting nexus yum repositories
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/yum.repos.d/{{ item }}"
+  with_items: "{{ nexus_repositories }}"
+
+- name: Install packages
+  package:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ prepare_packages }}"
+
+- name: Start required services
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    masked: no
+  with_items:
+      - sshd
+      - postfix
+
+- name: Add service http and https on firewalld
+  firewalld: 
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled  
+  with_items:
+    - http
+    - https
+
+- name: Reload firewalld service
+  systemd:
+    name: firewalld
+    state: reloaded 
+
+- name: Add gitlab user and gitlab home directory
+  user:
+    name: "{{ gitlab_user }}"
+    comment: gitlab user
+    append: yes
+    create_home: true
+    remove: true
+  
+#EOF

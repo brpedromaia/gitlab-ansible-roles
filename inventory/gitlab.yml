@@ -1,0 +1,6 @@
+all:
+    hosts: all-hosts
+    children:
+        gitlab:
+            hosts:
+                gitlab:

@@ -1,0 +1,8 @@
+[nexus-centos8]
+name=Centos Repository
+baseurl=http://nexus/repository/yum-centos8
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-8
+priority=1
+repo_gpgcheck=0

@@ -1,0 +1,8 @@
+gitlab_user: gitlab
+gitlab_home: /home/gitlab
+gitlab_group: gitlab
+
+gitlab_root_usr: 'admin'
+gitlab_root_psw: 'password'
+gitlab_ip: "{{ ansible_eth1.ipv4.address }}"
+gitlab_url: "http://{{ ansible_host }}"

@@ -1,0 +1,34 @@
+---
+
+
+- name: Download gitlab package script
+  get_url:
+    url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh
+    dest: /tmp/
+    mode: 0755
+
+- name: Run gitlab package script
+  shell: bash script.rpm.sh
+  args:
+    chdir: /tmp/
+
+- name: "Install GitLab"
+  shell: | 
+    EXTERNAL_URL="{{ gitlab_url }}" yum install -y gitlab-ee
+  
+- name: "Change root password"
+  shell: |
+    gitlab-rails console -e production <<-EOF
+    password = "{{ gitlab_root_psw }}"
+    user = User.find_by_username('root')
+    
+    password_attributes = {
+      password: password,
+      password_confirmation: password,
+      password_automatically_set: false
+    }
+
+    result = Users::UpdateService.new(user, password_attributes.merge(user: user)).execute
+    EOF
+    
+#EOF

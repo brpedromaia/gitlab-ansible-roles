@@ -1,0 +1,7 @@
+---
+
+- hosts: gitlab
+  become: true
+  roles:
+  - { role: prepare, tags: ["install"] }
+  - { role: install, tags: ["install"] }

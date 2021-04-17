@@ -1,0 +1,10 @@
+prepare_packages:
+  - curl 
+  - policycoreutils
+  - openssh-server
+  - postfix
+  - perl
+
+nexus_repositories:
+    - nexus-centos.repo
+    - nexus-epel.repo
